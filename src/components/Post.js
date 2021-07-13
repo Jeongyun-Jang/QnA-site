@@ -25,7 +25,7 @@ const Post = React.memo((props) => {
 });
 
 
-  export default Post;
+export default Post;
 
   
 const Text= styled.p`

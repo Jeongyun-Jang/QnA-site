@@ -11,10 +11,41 @@ const PostDetail = (props) => {
   const dispatch = useDispatch();
   const id = props.match.params.id;
 
+  const {history} = props;//history를 props에서 가지고 온다.    
+
+
 //  const user_info = useSelector((state) => state.user.user);
   const post_list = useSelector((store) => store.post.list);
   const post_idx = post_list.findIndex((p) => p.id === id);
   const post = post_list[post_idx];
+
+  const goBack = () =>{
+    props.history.push('/')
+  }
+
+  const editPost = (e) =>{
+    console.log("editPost Click");
+    e.preventDefault();
+    e.stopPropagation();
+    history.push(`/post/${id}`);
+  }
+
+  const deletePost = (e) =>{
+    console.log("deletePost Click");
+    e.preventDefault();
+    e.stopPropagation();
+
+    if(window.confirm("정말로 지우실건가요?")){
+        console.log("진짜 지운대")
+        dispatch(postActions.deletePostFB(id));
+        return;
+    }
+    console.log("안지운대")
+    return;
+
+
+  }
+
 
   React.useEffect(() => {
 
@@ -30,9 +61,34 @@ const PostDetail = (props) => {
 
   return (
     <React.Fragment>
-        {post && (
+        {post && (<Grid margin="90px auto" width="900px">
+            <Grid bg="#eee"
+                padding="40px 60px">
+                    <Text bold size='36px'>상세보기</Text>
+                    <Grid padding="8px 0px">
+                    <Text>제목:{post.title}</Text>
+                    </Grid>
+
+                    <Grid padding="8px 0px">
+                    <Text>글쓴이: {post.author}</Text>
+                    </Grid>
+
+                    <Grid padding="8px 0px">
+                    <Text>내용: {post.comment}</Text>
+                    </Grid>                    
+                    
+                    <Grid is_flex >
+                        <Button width="100px" onClick={goBack}>뒤로가기</Button>
+                        <Button width="100px" onClick={editPost}>수정</Button>
+                        <Button width="100px" onClick={deletePost}>삭제</Button>
+                    </Grid>
+
+                </Grid>
+            </Grid>
+            
+            /*{post && (
             <Post {...post} />
-            //<Post {...post} is_me={post.user_info.user_id === user_info?.uid} />
+            //<Post {...post} is_me={post.user_info.user_id === user_info?.uid} />*/
       )}
     </React.Fragment>
   );

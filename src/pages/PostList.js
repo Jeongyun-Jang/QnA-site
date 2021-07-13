@@ -29,7 +29,7 @@ const PostList = (props) => {
                 <Grid bg="#eee"
                     margin="20px auto"
                     padding="40px 60px">
-                    <Text bold size={120}>게시판 만들기</Text>
+                    <Text bold size='36px'>게시판 만들기</Text>
                     <Text>아주 간단한 게시판을 만들어봅시다.</Text>
                     <Button onClick={() => {
                         props.history.push("/post");

@@ -521,29 +521,38 @@ const getOnePostFB = (id) => {
       .get()
       .then((doc) => {
         let _post = doc.data();
+        /* //주석 풀고 사용하기
         let post = Object.keys(_post).reduce(
-         /*   
-          (acc, cur) => {
-            if (cur.indexOf("user_") !== -1) {
-              return {
-                ...acc,
-                user_info: { ...acc.user_info, [cur]: _post[cur] },
-              };
-            }
-            return { ...acc, [cur]: _post[cur] };
-          },
-          { id: doc.id, user_info: {} }*/
           (acc, cur) => {
             return { ...acc, [cur]: _post[cur] };
-          }, { id: doc.id }
-              
-
-        );
+          }, { id: doc.id }     
+        );*/
+        /*
+        let post = Object.keys(_post).reduce(
+            
+             (acc, cur) => {
+               if (cur.indexOf("user_") !== -1) {
+                 return {
+                   ...acc,
+                   user_info: { ...acc.user_info, [cur]: _post[cur] },
+                 };
+               }
+               return { ...acc, [cur]: _post[cur] };
+             },
+             { id: doc.id, user_info: {} }
+             (acc, cur) => {
+               return { ...acc, [cur]: _post[cur] };
+             }, { id: doc.id }
+                 
+   
+           );
+        */
 
         // 여기도 주석처리해줄거예요.
         // 그리고 좋아요 가져다 붙이는 부분을 적용해줄거예요!
         // // 하나를 가져오지만, 게시글 목록은 배열이잖아요! 배열 형태에 맞게 []로 싸줍니다.
         // // dispatch(setPost([post]));
+
 
         //dispatch(setIsLike([post]));
       });
@@ -567,6 +576,7 @@ const deletePostFB = (id) => {
       .delete()
       .then((res) => {
         dispatch(deletePost(id));
+        window.alert("게시글이 삭제 되었습니다. :)")
         history.replace("/");
       })
       .catch((err) => {

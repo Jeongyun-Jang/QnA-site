@@ -19,28 +19,28 @@ const PostWrite = (props) => {
   //   주소창을 보고 id값을 가져와요.
   const post_id = props.match.params.id;
   //   post id를 가지고 수정모드인 지, 작성 모드인지 구분해줍니다.
-  //const is_edit = post_id ? true : false;
+  const is_edit = post_id ? true : false;
 
   const { history } = props;
 
   //   수정모드라면? 게시글 정보를 가져와요!
   // 미리 어느정도 정보를 넣어주기 위해서 가져오는 거예요 :)
-  //let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
+let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
 
-/*  const [title, setTitle] = React.useState(_post ? _post.title : "");
+  const [title, setTitle] = React.useState(_post ? _post.title : "");
   const [author, setAuthor] = React.useState(_post ? _post.author : "");
   const [comment, setComment] = React.useState(_post ? _post.comment : "");
-*/
+/*
   const [title, setTitle] = React.useState("");
   const [author, setAuthor] = React.useState("");
   const [comment, setComment] = React.useState("");
-
+*/
   // layout_type을 정하는 부분입니다!
 
 //   const [layout_type, setLayoutType] = React.useState(
 //     _post ? _post.layout_type : ""
 //   );
-/*
+
   React.useEffect(() => {
     // 수정모드인데, 게시글 정보가 없으면? 경고를 띄우고 뒤로 가게 합니다.
     if (is_edit && !_post) {
@@ -52,11 +52,11 @@ const PostWrite = (props) => {
 
     // 수정모드라면?
     // 이미지 미리보기도 하나 넣어줘야죠!
-    if (is_edit) {
+    /*if (is_edit) {
       dispatch(imageActions.setPreview(_post.image_url));
-    }
+    }*/
   }, []);
-*/
+
   //   내용을 바꿔주는 함수
   // useState를 이용해요!
   const changeTitle = (e) => {
@@ -79,14 +79,14 @@ const PostWrite = (props) => {
   //   게시글을 추가하는 함수
   const addPost = () => {
     console.log("addPost실행==>",title,author,comment)
-    dispatch(postActions.addPostFB(title, author, comment))
-    console.log("addPostFB에 전송 완료")
+    if(dispatch(postActions.addPostFB(title, author, comment)))
+        console.log("addPostFB에 전송 완료")
     //dispatch(postActions.addPostFB(contents, layout_type));
   };
 
   //   게시글을 수정하는 함수
   const editPost = () => {
-    dispatch(postActions.editPostFB(post_id, { title: title, author: author, comment:comment }));
+    dispatch(postActions.editPostFB(post_id, { title : title, author : author, comment : comment }));
     //dispatch(postActions.editPostFB(post_id, { contents: contents }));
   };
 
@@ -111,18 +111,20 @@ const PostWrite = (props) => {
   }*/
 
   return (
-
-
     <React.Fragment>
             <Grid margin="90px auto" width="900px">
                 <Grid bg="#eee"
                     padding="40px 60px">
+                    <Grid padding="16px auto">
+                        <Text margin="0px" size="36px" bold>
+                        {is_edit ? "게시글 수정" : "게시글 작성"}
+                        </Text>
+                    </Grid>    
                     <Grid padding="8px 0px">
                     <Input
                         value={title}
                         onChange={changeTitle}
-                        placeholder="제목"
-                    
+                        placeholder="제목"                   
                         />
                     </Grid>
 
@@ -140,11 +142,24 @@ const PostWrite = (props) => {
                         onChange={changeComment}
                         placeholder="내용"
                         multiLine
-                        
                         />
                     </Grid>
 
-                    <Button width="100px" onClick={addPost}>글쓰기</Button>
+                    
+                    
+
+                    {is_edit ? (
+                        <Button width="100px" onClick={editPost}>수정하기</Button>
+                        ) : (
+                        <Button width="100px" onClick={addPost}>글쓰기</Button>
+                    )}
+                
+
+
+
+
+
+
                 </Grid>
             </Grid>
         </React.Fragment>
