@@ -25,26 +25,35 @@ const PostList = (props) => {
 
     return (
         <React.Fragment>
-            <Grid margin="90px auto" width="900px">
-                <Grid bg="#eee"
+            <Grid margin="20px auto" width="900px">
+                <Grid bg="#E6D4CA"
                     margin="20px auto"
                     padding="40px 60px">
                     <Text bold size='36px'>게시판 만들기</Text>
                     <Text>아주 간단한 게시판을 만들어봅시다.</Text>
-                    <Button onClick={() => {
-                        props.history.push("/post");
 
-                  }} width="100px"
+                    <Button onClick={() => {
+                        /*
+                        if(window.confirm("로그인이 필요해요! 로그인페이지로 이동할까요?")){
+                            console.log("로그인페이지로 이동")
+                            props.history.push("/login");
+                            return;
+                        }
+                        props.history.replace("/");
+                        return;*/
+                        props.history.replace("/post");
+                  }} width="100px" bg="#FFFCFA" padding="10px"
                     >글쓰기</Button>
                 </Grid>
 
-                <Grid padding="20px 20px" border="solid 3px">
+                <Grid padding="20px 20px" border="solid 3px" lineColor="#EBC2AC">
                     <Grid is_flex padding="4px 60px">
                         <Text>글번호</Text>
                         <Text>글쓴이</Text>
                         <Text>글제목</Text>
                     </Grid>  
-                    { post_list? post_list.map((p, idx) => {
+                    {
+                     post_list? post_list.map((p, idx) => {
                         return (
                             <Grid is_flex 
                             key={p.id}
@@ -59,10 +68,9 @@ const PostList = (props) => {
                             <Text>{post_list.length - idx}</Text>
                             <Text>{p.title}</Text>
                             <Text>{p.author}</Text>
-
                             </Grid>
                         );
-                    }) : console.log("출력할게없습니다.")}
+                    }) : console.log("출력할게 없습니다.")}
 
                  
                 </Grid>
@@ -97,20 +105,22 @@ const Grid = styled.div`
       : ""}
   ${(props) => props.center? `text-align: center;`: ""}
   ${(props) => props.border? `border: solid 2px;`: ""}
+  ${(props) => (props.lineColor? `border-color: ${props.lineColor};` : "")}
 `;
 
 const Button=styled.button`
 
 width: ${(props) => props.width};
-background-color: #212121;
-color: #ffffff;
+background-color: ${(props) => props.bg};
+color: #212121;
 padding: ${(props) => props.padding};
 box-sizing: border-box;
-border: none;
+font-weight: ${(props) => (props.bold? "600" : "400")};
 ${(props) => (props.margin ? `margin: ${props.margin};` : "")}
 ${(props) =>
     props._onClick
       ? `onClick: ${(props)=>(props._onClick)}; `
       : ""}
+
 `
 

@@ -21,12 +21,12 @@ import firebase from "firebase/app";
     
     firebase.initializeApp(firebaseConfig);
     
-    //const apiKey = firebaseConfig.apiKey;
-    //const auth = firebase.auth();
+    const apiKey = firebaseConfig.apiKey;
+    const auth = firebase.auth();
     const firestore = firebase.firestore();
-    //const storage = firebase.storage();
-    //const realtime = firebase.database();
+    const storage = firebase.storage();
+    const realtime = firebase.database();
     
-    export { //auth, apiKey,storage, realtime, 
-        firestore  };
+    export { //auth, apiKey, realtime, 
+        firestore,storage  };
     

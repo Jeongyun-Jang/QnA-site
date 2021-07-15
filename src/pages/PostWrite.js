@@ -1,10 +1,11 @@
 import React from "react";
 //import { Grid, Text, Button, Image, Input } from "../elements";
-//import Upload from "../shared/Upload";
+import {Image} from "../elements";
+import Upload from "../shared/Upload";
 
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators as postActions } from "../redux/modules/post";
-//import { actionCreators as imageActions } from "../redux/modules/image";
+import { actionCreators as imageActions } from "../redux/modules/image";
 import styled from "styled-components";
 
 
@@ -12,9 +13,8 @@ import styled from "styled-components";
 const PostWrite = (props) => {
   const dispatch = useDispatch();
   //const is_login = useSelector((state) => state.user.is_login);
-  //const preview = useSelector((state) => state.image.preview);
+  const preview = useSelector((state) => state.image.preview);
   const post_list = useSelector((state) => state.post.list);
-
 
   //   주소창을 보고 id값을 가져와요.
   const post_id = props.match.params.id;
@@ -25,7 +25,7 @@ const PostWrite = (props) => {
 
   //   수정모드라면? 게시글 정보를 가져와요!
   // 미리 어느정도 정보를 넣어주기 위해서 가져오는 거예요 :)
-let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
+  let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
 
   const [title, setTitle] = React.useState(_post ? _post.title : "");
   const [author, setAuthor] = React.useState(_post ? _post.author : "");
@@ -41,6 +41,7 @@ let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
 //     _post ? _post.layout_type : ""
 //   );
 
+
   React.useEffect(() => {
     // 수정모드인데, 게시글 정보가 없으면? 경고를 띄우고 뒤로 가게 합니다.
     if (is_edit && !_post) {
@@ -52,10 +53,16 @@ let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
 
     // 수정모드라면?
     // 이미지 미리보기도 하나 넣어줘야죠!
-    /*if (is_edit) {
+    if (is_edit) {
       dispatch(imageActions.setPreview(_post.image_url));
-    }*/
+    }
   }, []);
+/*
+  if (title === "" || author === "" || comment === "" ) {
+    window.alert("모두 입력해주세요!");
+    return;
+}*/
+
 
   //   내용을 바꿔주는 함수
   // useState를 이용해요!
@@ -112,8 +119,8 @@ let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
 
   return (
     <React.Fragment>
-            <Grid margin="90px auto" width="900px">
-                <Grid bg="#eee"
+            <Grid margin="20px auto" width="900px">
+                <Grid bg="#E6D4CA"
                     padding="40px 60px">
                     <Grid padding="16px auto">
                         <Text margin="0px" size="36px" bold>
@@ -145,21 +152,25 @@ let _post = is_edit ? post_list.find((p) => p.id === post_id) : null;
                         />
                     </Grid>
 
-                    
-                    
+                    <Grid padding="8px 0px">
+                    <Upload />
+
+                    <Text margin="0px" size="24px" bold>
+                        이미지 첨부
+                    </Text>    
+
+                    <Image
+                        shape="rectangle"
+                        src={preview ? preview : "http://via.placeholder.com/400x300"}
+                    />
+                    </Grid>
 
                     {is_edit ? (
-                        <Button width="100px" onClick={editPost}>수정하기</Button>
+                        <Button width="100px" bg="#FFFCFA" padding="10px"onClick={editPost}>수정하기</Button>
                         ) : (
-                        <Button width="100px" onClick={addPost}>글쓰기</Button>
+                        <Button width="100px" bg="#FFFCFA" padding="10px" onClick={addPost}>글쓰기</Button>
                     )}
                 
-
-
-
-
-
-
                 </Grid>
             </Grid>
         </React.Fragment>
@@ -247,8 +258,7 @@ const Grid = styled.div`
 const Button=styled.button`
 
 width: ${(props) => props.width};
-background-color: #212121;
-color: #ffffff;
+color: #212121;
 padding: ${(props) => props.padding};
 box-sizing: border-box;
 border: none;
@@ -257,6 +267,8 @@ ${(props) =>
     props._onClick
       ? `onClick: ${(props)=>(props._onClick)}; `
       : ""}
+background-color: ${(props) => props.bg};
+
 `
 
 const Input = styled.input`

@@ -1,12 +1,11 @@
 import { createAction, handleActions } from "redux-actions";
 import { produce } from "immer";
-import { firestore } from "../../shared/firebase";
-//import { storage } from "../shared/firebase";
+import { firestore, storage } from "../../shared/firebase";
 
-//import "moment";
-//import moment from "moment";
+import "moment";
+import moment from "moment";
 
-//import { actionCreators as imageActions } from "./image";
+import { actionCreators as imageActions } from "./image";
 
 const SET_POST = "SET_POST";
 const ADD_POST = "ADD_POST";
@@ -71,7 +70,7 @@ const editPostFB = (post_id = null, post = {}) => {
     }
 
     // 프리뷰 이미지를 가져옵니다.
-    //const _image = getState().image.preview;
+    const _image = getState().image.preview;
 
     // 수정하려는 게시글이 게시글 목록에서 몇 번째에 있나 확인합니다.
     const _post_idx = getState().post.list.findIndex((p) => p.id === post_id);
@@ -83,6 +82,7 @@ const editPostFB = (post_id = null, post = {}) => {
     // 파이어스토어에서 콜렉션 선택하기
     const postDB = firestore.collection("post");
 
+    /*
     //이미지 없는 상태
     postDB
         .doc(post_id)
@@ -90,14 +90,15 @@ const editPostFB = (post_id = null, post = {}) => {
         .then((doc) => {
           dispatch(editPost(post_id, { ...post }));
           //   프리뷰는 이제 null로 바꿔줍니다!
-          //dispatch(imageActions.setPreview(null));
+          dispatch(imageActions.setPreview(null));
           history.replace("/");
         });
       return;
-
-    // 현재 프리뷰의 이미지와 게시글 정보에 있는 이미지가 같은 지 확인합니다.
+    */
+    
+      // 현재 프리뷰의 이미지와 게시글 정보에 있는 이미지가 같은 지 확인합니다.
     // 같다면 이미지 업로드는 할 필요 없겠죠!
-    /*if (_image === _post.image_url) {
+    if (_image === _post.image_url) {
       // 게시글 정보를 수정해요!
       postDB
         .doc(post_id)
@@ -111,10 +112,11 @@ const editPostFB = (post_id = null, post = {}) => {
       return;
     } else {
       // 유저 정보를 가져와요 (유저 id!)
-      const user_id = getState().user.user.uid;
+      //const user_id = getState().user.user.uid;
       // 이미지를 data_url 방식으로 업로드하도록 준비!
       const _upload = storage
-        .ref(`images/${user_id}_${new Date().getTime()}`)
+        //.ref(`images/${user_id}_${new Date().getTime()}`)
+        .ref(`images/${new Date().getTime()}`)
         .putString(_image, "data_url");
 
       // 이미지를 업로드하고,
@@ -124,7 +126,7 @@ const editPostFB = (post_id = null, post = {}) => {
           .getDownloadURL()
           .then((url) => {
             //   아래 주석을 풀고 경로를 확인해보세요 :)
-            // console.log(url);
+            console.log("url===>",url);
 
             return url;
           })
@@ -143,11 +145,11 @@ const editPostFB = (post_id = null, post = {}) => {
               });
           })
           .catch((err) => {
-            window.alert("앗! 이미지 업로드에 문제가 있어요!");
-            console.log("앗! 이미지 업로드에 문제가 있어요!", err);
+            window.alert("앗! 이미지 업로드 중 문제발생!");
+            console.log("앗! 이미지 업로드 중 문제발생!", err);
           });
       });
-    }*/
+    }
 
   };
 };
@@ -175,13 +177,14 @@ const addPostFB = (title,author,comment) => {
       title:title,
       author:author,
       comment:comment,
+      insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
      /* 
       contents: contents,
       layout_type: layout_type,
       insert_dt: moment().format("YYYY-MM-DD hh:mm:ss"),
      */
     };
-
+/*
     postDB
         //.add({ ...user_info, ..._post, image_url: url })
         .add({ ..._post })
@@ -193,17 +196,17 @@ const addPostFB = (title,author,comment) => {
         history.replace("/");
 
         //   프리뷰는 이제 null로 바꿔줍니다!
-        //dispatch(imageActions.setPreview(null));
+        dispatch(imageActions.setPreview(null));
         })
         .catch((err) => {
         window.alert("앗! 포스트 작성에 문제가 있어요!");
         console.log("post 작성에 실패했어요!", err);
         });
-
+*/
     // 이미지도 가져옵니다.
-    //const _image = getState().image.preview;
+    const _image = getState().image.preview;
     
-    /*
+    
     // 만약 이미지가 없으면? 경고를 띄워주고 업로드하지 않아요!
     if (!_image) {
       window.alert("이미지가 필요해요!");
@@ -211,7 +214,8 @@ const addPostFB = (title,author,comment) => {
     }
     // 이미지 업로드 먼저! (이미지 업로드가 실패하면 게시글도 업로드 하지 않게!)
     const _upload = storage
-      .ref(`images/${user_info.user_id}_${new Date().getTime()}`)
+      //.ref(`images/${user_info.user_id}_${new Date().getTime()}`)
+      .ref(`images/${new Date().getTime()}`)
       .putString(_image, "data_url");
 
     _upload.then((snapshot) => {
@@ -224,9 +228,11 @@ const addPostFB = (title,author,comment) => {
           // 이미지 업로드가 무사히 잘 끝났다면, 이제 게시글 정보를 파이어스토어에 넣어줍니다.
           // 주의! 파이어스토어에는 리덕스에서 관리하는 것과 조금 다르게 게시글 1개 정보를 관리할거예요.
           postDB
-            .add({ ...user_info, ..._post, image_url: url })
+            //.add({ ...user_info, ..._post, image_url: url })
+            .add({ ..._post, image_url: url })
             .then((doc) => {
-              let post = { user_info, ..._post, id: doc.id, image_url: url };
+              //let post = { user_info, ..._post, id: doc.id, image_url: url };
+              let post = { ..._post, id: doc.id, image_url: url };
               dispatch(addPost(post));
               history.replace("/");
 
@@ -239,12 +245,11 @@ const addPostFB = (title,author,comment) => {
             });
         })
         .catch((err) => {
-          window.alert("앗! 이미지 업로드에 문제가 있어요!");
-          console.log("앗! 이미지 업로드에 문제가 있어요!", err);
+          window.alert("앗! 이미지 업로드중 문제 발생!");
+          console.log("앗! 이미지 업로드중 문제 발생!", err);
         });
     });
 
-    */
   };
 };
 

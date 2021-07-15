@@ -6,10 +6,10 @@ import { history } from "../redux/configureStore";
 
 // pages에 index.js 파일을 만들고, index.js 내에서 모든 파일을 임포트, 익스포트 해주면
 // 이런 식으로도 불러 올 수 있어요.
-import { //Login, Signup, 
+import { Login, Signup, 
   PostDetail, PostList, PostWrite } from "../pages";
 
-//import {Header} from "../components";
+import {Header} from "../components";
 import { Grid, Button } from "../elements";
 
 import { useDispatch } from "react-redux";
@@ -38,11 +38,11 @@ function App() {
       <Grid>
         {/* connectedrouter로 리덕스와 컴포넌트를 묶어줄거예요. 여기 들어가는 history는 우리가 만든 커스텀 history예요. */}
         <ConnectedRouter history={history}>
-          {/*<Header></Header>*/}
+          <Header></Header>
           {/* 아직 목록 페이지가 없으니, 루트 경로(/)는 Login을 엮어줄게요! */}
           <Route path="/" exact component={PostList} />
-          {/*<Route path="/login" exact component={Login} />
-          <Route path="/signup" exact component={Signup} />*/}
+          <Route path="/login" exact component={Login} />
+          <Route path="/signup" exact component={Signup} />
           <Route path="/post" exact component={PostWrite} />
           <Route path="/post/:id" exact component={PostWrite} />
           <Route path="/view/:id" exact component={PostDetail} />

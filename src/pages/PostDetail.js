@@ -3,6 +3,7 @@ import Post from "../components/Post";
 
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import {Image} from "../elements"
 
 import { actionCreators as postActions } from "../redux/modules/post";
 
@@ -16,8 +17,10 @@ const PostDetail = (props) => {
 
 //  const user_info = useSelector((state) => state.user.user);
   const post_list = useSelector((store) => store.post.list);
+ 
   const post_idx = post_list.findIndex((p) => p.id === id);
   const post = post_list[post_idx];
+
 
   const goBack = () =>{
     props.history.push('/')
@@ -42,29 +45,25 @@ const PostDetail = (props) => {
     }
     console.log("안지운대")
     return;
-
-
   }
 
-
   React.useEffect(() => {
-
-    // 만약 게시글이 없으면?
     if (post) {
         return;
     }
-  
-      // 파이어스토어에서 이 게시글 1개 정보만 가져와요!
       dispatch(postActions.getOnePostFB(id));
-
   }, []);
 
   return (
     <React.Fragment>
-        {post && (<Grid margin="90px auto" width="900px">
-            <Grid bg="#eee"
+        {post && (<Grid margin="20px auto" width="900px">
+            <Grid bg="#E6D4CA"
                 padding="40px 60px">
-                    <Text bold size='36px'>상세보기</Text>
+                    <Grid is_flex>
+                        <Text bold size='36px'>상세보기</Text>
+                        <Text>{post.insert_dt}</Text>
+                    </Grid>
+                    
                     <Grid padding="8px 0px">
                     <Text>제목:{post.title}</Text>
                     </Grid>
@@ -75,12 +74,17 @@ const PostDetail = (props) => {
 
                     <Grid padding="8px 0px">
                     <Text>내용: {post.comment}</Text>
-                    </Grid>                    
+                    </Grid>
+
+                    <Grid padding="8px 0px">
+                    <Image shape="rectangle" src={post.image_url} />
+                    </Grid>
+
                     
                     <Grid is_flex >
-                        <Button width="100px" onClick={goBack}>뒤로가기</Button>
-                        <Button width="100px" onClick={editPost}>수정</Button>
-                        <Button width="100px" onClick={deletePost}>삭제</Button>
+                        <Button width="100px" padding="10px" bold onClick={goBack}>뒤로가기</Button>
+                        <Button width="100px" padding="10px" bold onClick={editPost}>수정</Button>
+                        <Button width="100px" padding="10px" bold onClick={deletePost}>삭제</Button>
                     </Grid>
 
                 </Grid>
@@ -96,8 +100,6 @@ const PostDetail = (props) => {
 
 export default PostDetail;
 
-
-
 const Text= styled.p`
   color: ${(props) => props.color};
   font-size: ${(props) => props.size};
@@ -108,8 +110,8 @@ const Text= styled.p`
 const Button=styled.button`
 
 width: ${(props) => props.width};
-background-color: #212121;
-color: #ffffff;
+background-color: #FFFCFA;
+color: #212121;
 padding: ${(props) => props.padding};
 box-sizing: border-box;
 border: none;
