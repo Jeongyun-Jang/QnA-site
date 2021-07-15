@@ -27,6 +27,6 @@ import firebase from "firebase/app";
     const storage = firebase.storage();
     const realtime = firebase.database();
     
-    export { //auth, apiKey, realtime, 
+    export { auth, apiKey, realtime, 
         firestore,storage  };
     

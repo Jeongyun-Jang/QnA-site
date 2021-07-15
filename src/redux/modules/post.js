@@ -194,7 +194,6 @@ const addPostFB = (title,author,comment) => {
         console.log("addPostFB 할때 post 값",post)
         dispatch(addPost(post));
         history.replace("/");
-
         //   프리뷰는 이제 null로 바꿔줍니다!
         dispatch(imageActions.setPreview(null));
         })
@@ -277,8 +276,8 @@ const getPostFB = ()=>{
     // 쿼리를 작성해요!
     // 작성일 기준으로 역순 정렬할거예요.
     // +) asc, desc를 왔다갔다 하면서 정렬을 바꿔보세요!
-    //let query = postDB.orderBy("insert_dt", "desc");
-    let query = postDB.orderBy("title","desc");
+    let query = postDB.orderBy("insert_dt", "desc");
+    //let query = postDB.orderBy("title","desc");
 
     // 만약 시작점이 있다면? (start는 매개변수로 가져오는 걸 잊으면 안됩니다! -> getPostFB를 부를 때는? paging의 next 값을 start로 넘겨주겠죠!)
     /*if (start) {
@@ -377,19 +376,14 @@ const toggleLikeFB = (post_id) => {
     if (!getState().user.user) {
       return;
     }
-
     const postDB = firestore.collection("post");
     const likeDB = firestore.collection("like");
-
     // post를 찾기 위해, 배열의 몇 번째에 있나 찾아옵니다.
     const _idx = getState().post.list.findIndex((p) => p.id === post_id);
-
     // post 정보를 가져오고,
     const _post = getState().post.list[_idx];
-
     // user id도 가져와요!
     const user_id = getState().user.user.uid;
-
     // 좋아요한 상태라면 해제하기
     // 해제 순서
     // 1. likeDB에서 해당 데이터를 지우고,
@@ -400,25 +394,20 @@ const toggleLikeFB = (post_id) => {
         .where("user_id", "==", user_id)
         .get()
         .then((docs) => {
-
           // batch는 파이어스토어에 작업할 내용을 묶어서 한번에 하도록 도와줘요!
           // 자세한 내용은 firestore docs를 참고해주세요 :) 
           // 저는 아래에서 like 콜렉션에 있을 좋아요 데이터를 지우고, 
           // post 콜렉션의 like_cnt를 하나 빼줬습니다!
           let batch = firestore.batch();
-
           docs.forEach((doc) => {
             batch.delete(likeDB.doc(doc.id));
           });
-
           batch.update(postDB.doc(post_id), {
             like_cnt:
               //_post.like_cnt - 1 < 1 ? _post.like_cnt : _post.like_cnt - 1,
               _post.like_cnt - 1,
           });
-
           batch.commit().then(() => {
-
             // 이제 리덕스 데이터를 바꿔줘요!
             dispatch(likeToggle(post_id, !_post.is_like));
           });
@@ -431,18 +420,15 @@ const toggleLikeFB = (post_id) => {
       // 좋아요 순서
       // 1. likeDB에서 해당 데이터를 넣고,
       // 2. postDB에서 like_cnt를 +1해주기
-
       likeDB.add({ post_id: post_id, user_id: user_id }).then(doc => {
         postDB.doc(post_id).update({ like_cnt: _post.like_cnt + 1 }).then(doc => {
           // 이제 리덕스 데이터를 바꿔줘요!
           dispatch(likeToggle(post_id, !_post.is_like));
         });
       });
-
     }
   };
 };
-
 // 좋아요 리스트를 가져와서 리덕스에 넣어주는 함수
 const setIsLike = (_post_list, paging) => {
   return function (dispatch, getState, { history }) {
@@ -450,29 +436,22 @@ const setIsLike = (_post_list, paging) => {
     if (!getState().user.is_login) {
       return;
     }
-
     // 이제 좋아요 리스트를 가져올거예요 :)
     // 1. post_list에 들어있는 게시물의 좋아요 리스트를 가져오고,
     // 2. 지금 사용자가 좋아요를 했는 지 확인해서,
     // 3. post의 is_like에 넣어줄거예요!
-
     // likeDB를 잡아주고,
     const likeDB = firestore.collection("like");
-
     // post_list의 id 배열을 만들어요
     const post_ids = _post_list.map((p) => p.id);
-
     // query를 써줍니다!
     // 저는 post_id를 기준으로 가져올거예요.
     let like_query = likeDB.where("post_id", "in", post_ids);
-
     like_query.get().then((like_docs) => {
       // 이제 가져온 like_docs에서 로그인한 유저가 좋아요했는 지 확인해볼까요?
       // 좋아요했는 지 확인한 후, post의 is_like를 true로 바꿔주면 끝입니다! :)
-
       // 주의) 여기에서 데이터를 정제할건데, 여러 가지 방법으로 데이터를 정제할 수 있어요.
       // 지금은 우리한테 익숙한 방법으로 한 번 해보고, 나중에 다른 방법으로도 해보세요 :)
-
       // 파이어스토어에서 가져온 데이터를 {}로 만들어줄거예요.
       let like_list = {};
       like_docs.forEach((doc) => {
@@ -482,7 +461,6 @@ const setIsLike = (_post_list, paging) => {
         //   ...like_list[doc.data().post_id], // 해당 키에 밸류가 있다면, 그 밸류를 그대로 넣어주기
         //   doc.data().user_id, // user_id를 배열 안에 넣어줘요!
         // ]; <- 대괄호 닫기!
-
         // like_list에 post_id로 된 키가 있다면?
         // 있으면 배열에 기존 배열 + 새로운 user_id를 넣고,
         // 없으면 새 배열에 user_id를 넣어줍니다! :)
@@ -495,10 +473,8 @@ const setIsLike = (_post_list, paging) => {
           like_list[doc.data().post_id] = [doc.data().user_id];
         }
       });
-
       // 아래 주석을 풀고 콘솔로 확인해보세요!
       // console.log(like_list);
-
       // user_id 가져오기!
       const user_id = getState().user.user.uid;
       let post_list = _post_list.map((p) => {
@@ -507,10 +483,8 @@ const setIsLike = (_post_list, paging) => {
           // is_like만 true로 바꿔서 return 해줘요!
           return { ...p, is_like: true };
         }
-
         return p;
       });
-
       dispatch(setPost(post_list, paging));
     });
   };
@@ -642,16 +616,13 @@ export default handleActions(
         }
       }),
     /*
-
     [LOADING]: (state, action) =>
       produce(state, (draft) => {
         //   데이터를 가져오는 중인 지 여부를 작성합니다.
         draft.is_loading = action.payload.is_loading;
       }),
-
     [LIKE_TOGGLE]: (state, action) =>
       produce(state, (draft) => {
-
         // 배열에서 몇 번째에 있는 지 찾은 다음, is_like를 action에서 가져온 값으로 바꾸기!
         let idx = draft.list.findIndex((p) => p.id === action.payload.post_id);
         

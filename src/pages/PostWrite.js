@@ -15,9 +15,15 @@ const PostWrite = (props) => {
   //const is_login = useSelector((state) => state.user.is_login);
   const preview = useSelector((state) => state.image.preview);
   const post_list = useSelector((state) => state.post.list);
+  //const is_login = useSelector((state) => state.user.is_login);
+
+
+  //  <Route path="/post" exact component={PostWrite} />
+  //  <Route path="/post/:id" exact component={PostWrite} />
 
   //   주소창을 보고 id값을 가져와요.
   const post_id = props.match.params.id;
+
   //   post id를 가지고 수정모드인 지, 작성 모드인지 구분해줍니다.
   const is_edit = post_id ? true : false;
 

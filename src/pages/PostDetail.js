@@ -7,9 +7,13 @@ import {Image} from "../elements"
 
 import { actionCreators as postActions } from "../redux/modules/post";
 
+import Permit from "../shared/Permit";
+
 // 게시글 상세 페이지
 const PostDetail = (props) => {
   const dispatch = useDispatch();
+
+  //<Route path="/view/:id" exact component={PostDetail} />
   const id = props.match.params.id;
 
   const {history} = props;//history를 props에서 가지고 온다.    
@@ -20,6 +24,7 @@ const PostDetail = (props) => {
  
   const post_idx = post_list.findIndex((p) => p.id === id);
   const post = post_list[post_idx];
+  //const is_me = post.user_info.user_id === user_info?.uid;
 
 
   const goBack = () =>{
@@ -79,16 +84,23 @@ const PostDetail = (props) => {
                     <Grid padding="8px 0px">
                     <Image shape="rectangle" src={post.image_url} />
                     </Grid>
-
-                    
-                    <Grid is_flex >
+                 
+                    <Grid is_flex>
                         <Button width="100px" padding="10px" bold onClick={goBack}>뒤로가기</Button>
-                        <Button width="100px" padding="10px" bold onClick={editPost}>수정</Button>
-                        <Button width="100px" padding="10px" bold onClick={deletePost}>삭제</Button>
+                        <Grid is_flex>
+                        <Button width="100px" padding="10px" margin="0px 5px" bold onClick={editPost}>수정</Button>
+                        <Button width="100px" padding="10px"margin="0px 5px" bold onClick={deletePost}>삭제</Button>
+                       </Grid>
+                       {/* {is_me  && ( //자기자신일 때만 보여준다.
+                        <Grid is_flex>
+                        <Button width="100px" padding="10px" margin="0px 5px" bold onClick={editPost}>수정</Button>
+                        <Button width="100px" padding="10px"margin="0px 5px" bold onClick={deletePost}>삭제</Button>
+                       </Grid>)}*/}
                     </Grid>
 
                 </Grid>
             </Grid>
+            
             
             /*{post && (
             <Post {...post} />

@@ -13,9 +13,9 @@ import {Header} from "../components";
 import { Grid, Button } from "../elements";
 
 import { useDispatch } from "react-redux";
-//import { actionCreators as userActions } from "../redux/modules/user";
+import { actionCreators as userActions } from "../redux/modules/user";
 
-//import { apiKey } from "./firebase";
+import { apiKey } from "./firebase";
 import { Route } from "react-router-dom";
 
 
@@ -24,13 +24,13 @@ import { Route } from "react-router-dom";
 function App() {
   const dispatch = useDispatch();
 
-  //const _session_key = `firebase:authUser:${apiKey}:[DEFAULT]`;
-  //const is_session = sessionStorage.getItem(_session_key) ? true : false;
+  const _session_key = `firebase:authUser:${apiKey}:[DEFAULT]`;
+  const is_session = sessionStorage.getItem(_session_key) ? true : false;
 
-  React.useEffect(() => {
-  /*  if (is_session) {
+  React.useEffect(() => { //렌더링될 때 마다 탐색한다.
+    if (is_session) {
       dispatch(userActions.loginCheckFB());
-    }*/
+    }
   }, []);
 
   return (
